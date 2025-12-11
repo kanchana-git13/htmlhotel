@@ -1,0 +1,159 @@
+<DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HOTEL BILLING SYSTEM</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #4e54c8, #8f94fb);
+            height: 100vh;
+            padding: 40px;
+            color: white;
+        }
+
+        .container {
+            width: 480px;
+            margin: auto;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 0 25px rgba(0,0,0,0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        h2, h3 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 15px;
+        }
+
+        select, input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            margin-top: 6px;
+            border-radius: 10px;
+            border: none;
+            outline: none;
+            font-size: 16px;
+        }
+
+        input[type="checkbox"] {
+            margin-right: 10px;
+        }
+
+        button {
+            width: 100%;
+            margin-top: 25px;
+            padding: 14px;
+            background: linear-gradient(135deg, #ff512f, #dd2476);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 0 12px rgba(0,0,0,0.2);
+        }
+
+        button:hover {
+            box-shadow: 0 0 20px rgba(255,255,255,0.6);
+            transform: scale(1.02);
+        }
+
+        #invoice {
+            background: #1e1e1e;
+            color: #00ff99;
+            padding: 15px;
+            margin-top: 25px;
+            border-radius: 10px;
+            white-space: pre-wrap;
+            font-family: "Courier New", monospace;
+            box-shadow: 0 0 12px rgba(0,0,0,0.5);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>HOTEL BILLING SYSTEM</h2>
+
+        <label>Room Type:
+            <select id="roomType">
+                <option value="single">Single (Rs. 2000/night)</option>
+                <option value="double">Double (Rs. 4000/night)</option>
+                <option value="suite">Suite (Rs. 10000/night)</option>
+            </select>
+        </label>
+
+        <label>Number of Nights:
+            <input id="nights" type="number" min="1">
+        </label>
+
+        <label><input type="checkbox" id="breakfast"> Breakfast (Rs. 200/day)</label>
+        <label><input type="checkbox" id="airport"> Airport Pickup (Rs. 2899 one-time)</label>
+        <label><input type="checkbox" id="laundry"> Laundry (Rs. 200/day)</label>
+
+        <button id="calculate">Calculate Bill</button>
+
+        <h3>Invoice</h3>
+        <pre id="invoice"></pre>
+    </div>
+
+    <script>
+        const roomType = document.getElementById('roomType');
+        const nights = document.getElementById('nights');
+        const breakfast = document.getElementById('breakfast');
+        const airport = document.getElementById('airport');
+        const laundry = document.getElementById('laundry');
+        const calculate = document.getElementById('calculate');
+        const invoice = document.getElementById('invoice');
+
+        const roomPrices = {
+            single: 2000,
+            double: 4000,
+            suite: 10000
+        };
+
+        calculate.addEventListener('click', function () {
+            const n = Number(nights.value);
+
+            if (Number.isNaN(n) || n < 1) {
+                invoice.textContent = "Enter a valid number of nights (>= 1)";
+                return;
+            }
+
+            const selectedRoom = roomType.value;
+            const roomRate = roomPrices[selectedRoom];
+            const roomCost = roomRate * n;
+
+            const breakfastCost = breakfast.checked ? 200 * n : 0;
+            const laundryCost = laundry.checked ? 200 * n : 0;
+            const airportCost = airport.checked ? 2899 : 0;
+
+            const total = roomCost + breakfastCost + laundryCost + airportCost;
+
+            invoice.textContent =
+                `Room Type: ${selectedRoom.toUpperCase()}
+Nights: ${n}
+--------------------------------
+Room Cost: Rs. ${roomCost}
+Breakfast Cost: Rs. ${breakfastCost}
+Laundry Cost: Rs. ${laundryCost}
+Airport Pickup: Rs. ${airportCost}
+--------------------------------
+TOTAL BILL: Rs. ${total}`;
+        });
+    </script>
+
+</body>
+</html>
+
